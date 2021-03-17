@@ -28,4 +28,5 @@
 #circuito.vhd
 #detectorDeMoedas.vhd
 #impressora.vhd
-sevenSeg.vhd
+#sevenSeg.vhd
+
