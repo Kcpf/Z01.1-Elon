@@ -17,5 +17,14 @@ end entity;
 architecture arch of Or8Way is
 begin
 
+	q <= '1' when (a = '1' or
+				   b = '1' or
+				   c = '1' or
+				   d = '1' or
+				   e = '1' or
+				   f = '1' or
+				   g = '1' or
+				   h = '1') 
+		 else '0';
 
 end architecture;
