@@ -11,6 +11,6 @@ end entity;
 
 architecture rtl of DMux2Way is
 begin
-	q0 <= a when sel else;
-	q1 <= a when not(sel) else;
+
+
 end architecture;
