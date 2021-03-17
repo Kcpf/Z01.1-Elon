@@ -12,5 +12,4 @@ end entity;
 architecture rtl of DMux2Way is
 begin
 
-
 end architecture;
