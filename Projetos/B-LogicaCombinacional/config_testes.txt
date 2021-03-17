@@ -2,7 +2,7 @@
 # Rafael.Corsi @ Insper.edu.br       #
 #  Elementos de Sistemas             # 
 #                                    # 
-# Arquivos de teste do projeto B     #
+# Arquivos de teste do projeto C     #
 #  - Para incluir o teste basta      #
 #  descomentar a linha               #
 #                                    #
