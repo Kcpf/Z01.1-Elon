@@ -9,7 +9,6 @@ end entity;
 
 architecture arch of Not16 is
 begin
-
 	q(0) <= not(a(0));
 	q(1) <= not(a(1));
 	q(2) <= not(a(2));
@@ -25,6 +24,5 @@ begin
 	q(12) <= not(a(12));
 	q(13) <= not(a(13));
 	q(14) <= not(a(14));
-	q(15) <= not(a(15));
-	
+	q(15) <= not(a(15));	
 end architecture;
