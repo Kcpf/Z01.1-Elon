@@ -19,6 +19,12 @@ begin
 			"0100000" when (bcd = "0110") else
 			"0001111" when (bcd = "0111") else
 			"0000000" when (bcd = "1000") else
-			"0001100";
+			"0000100" when (bcd = "1001") else
+			"0001000" when (bcd = "1010") else
+			"1100000" when (bcd = "1011") else
+			"0110001" when (bcd = "1100") else
+			"1000010" when (bcd = "1101") else
+			"0110000" when (bcd = "1110") else
+			"0111000";
 
 end architecture;
