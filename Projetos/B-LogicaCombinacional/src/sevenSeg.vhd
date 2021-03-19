@@ -25,6 +25,7 @@ begin
 			"0110001" when (bcd = "1100") else
 			"1000010" when (bcd = "1101") else
 			"0110000" when (bcd = "1110") else
-			"0111000";
+			"0111000" when (bcd = "1111") else
+			"1111111";
 
 end architecture;
