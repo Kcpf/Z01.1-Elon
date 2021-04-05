@@ -19,6 +19,22 @@ architecture rtl of comparador16 is
   -- utilizados nesse modulo.
 
 begin
-  -- Implementação vem aqui!
+  process(a)
+  begin
+    
+    if a(15) = '1' then 
+      ng <= '1';
+  
+    else 
+      ng <= '0';
+    end if;
+    
+    if a = "0000000000000000" then 
+      zr <= '1';
+    
+    else 
+      zr <= '0';
+    end if;
 
+  end process;
 end architecture;
