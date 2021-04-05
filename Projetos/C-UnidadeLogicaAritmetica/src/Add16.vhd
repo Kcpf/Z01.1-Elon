@@ -20,6 +20,7 @@ architecture rtl of Add16 is
   -- Aqui declaramos sinais (fios auxiliares)
   -- e componentes (outros módulos) que serao
   -- utilizados nesse modulo.
+  signal aux : std_logic_vector(16 downto 0);
 
   component FullAdder is
     port(
@@ -29,6 +30,19 @@ architecture rtl of Add16 is
   end component;
 
 begin
+  aux(0) <= '0';
+
+  GEN : 
+  for i in 0 to 15 generate
+    u1: FullAdder port map(
+      a => a(i),
+      b => b(i),
+      c => aux(i),
+      soma => q(i),
+      vaium => aux(i+1)
+    );
+    
+  end generate GEN;
   -- Implementação vem aqui!
 
 end architecture;
