@@ -12,7 +12,8 @@ entity Add16 is
 	port(
 		a   :  in STD_LOGIC_VECTOR(15 downto 0);
 		b   :  in STD_LOGIC_VECTOR(15 downto 0);
-		q   : out STD_LOGIC_VECTOR(15 downto 0)
+		q   : out STD_LOGIC_VECTOR(15 downto 0);
+    vaium : out STD_LOGIC
 	);
 end entity;
 
@@ -44,5 +45,6 @@ begin
     
   end generate GEN;
   -- Implementação vem aqui!
+  vaium <= aux(16);
 
 end architecture;

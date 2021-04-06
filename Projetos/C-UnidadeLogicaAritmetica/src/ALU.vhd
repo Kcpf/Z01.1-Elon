@@ -31,12 +31,17 @@ entity ALU is
 			x,y:   in STD_LOGIC_VECTOR(15 downto 0); -- entradas de dados da ALU
 			zx:    in STD_LOGIC;                     -- zera a entrada x
 			nx:    in STD_LOGIC;                     -- inverte a entrada x
+      sizex: in STD_LOGIC_VECTOR(2 downto 0);  -- tamanho do shift em x
+      dirx:  in STD_LOGIC;                     -- direcao do shift em x
 			zy:    in STD_LOGIC;                     -- zera a entrada y
 			ny:    in STD_LOGIC;                     -- inverte a entrada y
-			f:     in STD_LOGIC;                     -- se 0 calcula x & y, senão x + y
+      sizey: in STD_LOGIC_VECTOR(2 downto 0);  -- tamanho do shift em y
+      diry:  in STD_LOGIC;                     -- direcao do shift em y
+			f:     in STD_LOGIC_VECTOR(1 downto 0);  -- se 0 calcula x & y, senão x + y
 			no:    in STD_LOGIC;                     -- inverte o valor da saída
 			zr:    out STD_LOGIC;                    -- setado se saída igual a zero
 			ng:    out STD_LOGIC;                    -- setado se saída é negativa
+      carry: out STD_LOGIC;                    -- carry da soma
 			saida: out STD_LOGIC_VECTOR(15 downto 0) -- saída de dados da ALU
 	);
 end entity;
@@ -47,16 +52,27 @@ architecture  rtl OF alu is
   -- utilizados nesse modulo.
 
 	component zerador16 IS
-		port(z   : in STD_LOGIC;
-			 a   : in STD_LOGIC_VECTOR(15 downto 0);
-			 y   : out STD_LOGIC_VECTOR(15 downto 0)
-			);
+		port(
+      z   : in STD_LOGIC;
+			a   : in STD_LOGIC_VECTOR(15 downto 0);
+			y   : out STD_LOGIC_VECTOR(15 downto 0)
+		);
 	end component;
 
 	component inversor16 is
-		port(z   : in STD_LOGIC;
-			 a   : in STD_LOGIC_VECTOR(15 downto 0);
-			 y   : out STD_LOGIC_VECTOR(15 downto 0)
+		port(
+      z   : in STD_LOGIC;
+			a   : in STD_LOGIC_VECTOR(15 downto 0);
+			y   : out STD_LOGIC_VECTOR(15 downto 0)
+		);
+	end component;
+
+  component BarrelShifter16 is
+		port(
+			a:    in  STD_LOGIC_VECTOR(15 downto 0);   
+			dir:  in  STD_LOGIC;                       
+			size: in  STD_LOGIC_VECTOR(2 downto 0);    
+			q:    out STD_LOGIC_VECTOR(15 downto 0)  
 		);
 	end component;
 
@@ -64,7 +80,8 @@ architecture  rtl OF alu is
 		port(
 			a   :  in STD_LOGIC_VECTOR(15 downto 0);
 			b   :  in STD_LOGIC_VECTOR(15 downto 0);
-			q   : out STD_LOGIC_VECTOR(15 downto 0)
+			q   : out STD_LOGIC_VECTOR(15 downto 0);
+      vaium : out STD_LOGIC
 		);
 	end component;
 
@@ -76,6 +93,14 @@ architecture  rtl OF alu is
 		);
 	end component;
 
+  component Xor16 is
+    port (
+			a:   in  STD_LOGIC_VECTOR(15 downto 0);
+			b:   in  STD_LOGIC_VECTOR(15 downto 0);
+			q:   out STD_LOGIC_VECTOR(15 downto 0) 
+    );
+  end component;
+
 	component comparador16 is
 		port(
 			a   : in STD_LOGIC_VECTOR(15 downto 0);
@@ -84,16 +109,17 @@ architecture  rtl OF alu is
     );
 	end component;
 
-	component Mux16 is
+	component Mux3Way16 is
 		port (
 			a:   in  STD_LOGIC_VECTOR(15 downto 0);
 			b:   in  STD_LOGIC_VECTOR(15 downto 0);
-			sel: in  STD_LOGIC;
+      c:   in  STD_LOGIC_VECTOR(15 downto 0);
+			sel: in  STD_LOGIC_VECTOR(1 downto 0);
 			q:   out STD_LOGIC_VECTOR(15 downto 0)
 		);
 	end component;
 
-   SIGNAL zxout,zyout,nxout,nyout,andout,adderout,muxout,precomp: std_logic_vector(15 downto 0);
+   SIGNAL zxout,zyout,nxout,nyout,sxout,syout,andout,adderout,xorout,muxout,precomp: std_logic_vector(15 downto 0);
 
 begin
   -- Implementação vem aqui!
@@ -121,21 +147,43 @@ begin
     y => nyout
   );
 
+  shifterx : BarrelShifter16 port map (
+    a => nxout,  
+    dir => dirx,                     
+    size => sizex, 
+    q => sxout  
+  );
+
+  shiftery : BarrelShifter16 port map (
+    a => nyout,  
+    dir => diry,                     
+    size => sizey, 
+    q => syout
+  );
+
   addoperator : Add16 port map (
-    a => nxout,
-    b => nyout,
-    q => adderout
+    a => sxout,
+    b => syout,
+    q => adderout,
+    vaium => carry
   );
 
   andoperator : And16 port map (
-    a => nxout,
-    b => nyout,
+    a => sxout,
+    b => syout,
     q => andout
   );
 
-  mux : Mux16 port map (
+  xoroperator : Xor16 port map (
+    a => sxout,
+    b => syout,
+    q => xorout
+  );
+
+  mux : Mux3Way16 port map (
     a => andout,
     b => adderout,
+    c => xorout,
     sel => f,
     q => muxout
   );

@@ -28,7 +28,7 @@ circuito.vhd
 detectorDeMoedas.vhd
 impressora.vhd
 sevenSeg.vhd
-# BarrelShifter16.vhd # Nao precisa ser feito
+BarrelShifter16.vhd
 
 ##### conceito A e B
 
