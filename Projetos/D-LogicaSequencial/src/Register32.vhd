@@ -27,14 +27,14 @@ architecture arch of Register32 is
 
 begin
 
-	registerComponent0 : tb_Register16 port map(
+	registerComponent0 : Register16 port map(
 		clock => clock,
 		input => input(15 downto 0),
 		load => load,
 		output => output(15 downto 0)
 	);
 
-	registerComponent1 : tb_Register16 port map(
+	registerComponent1 : Register16 port map(
 		clock => clock,
 		input => input(31 downto 16),
 		load => load,
