@@ -37,7 +37,34 @@ begin
     test_runner_setup(runner, runner_cfg);
 
     -- IMPLEMENTE AQUI!
+    -- q <= 0
+    -- notq <= not q (1)
+    -- q <= (J and notq) or (not K and q);
     wait until clk'event and clk='0';
+
+		j <= '1'; k <= '1';
+    wait until clk'event and clk='0';
+		assert(q = '1' and notq = '0')  report "Teste 0 Falhou" severity error;
+
+		j <= '0'; k <= '0';
+    wait until clk'event and clk='0';
+		assert(q = '1' and notq = '0')  report "Teste 1 Falhou" severity error;
+    
+		j <= '1'; k <= '0';
+    wait until clk'event and clk='0';
+		assert(q = '1' and notq = '0')  report "Teste 2 Falhou" severity error;
+
+		j <= '0'; k <= '0';
+    wait until clk'event and clk='0';
+		assert(q = '1' and notq = '0')  report "Teste 3 Falhou" severity error;
+
+		j <= '0'; k <= '1';
+    wait until clk'event and clk='0';
+		assert(q = '0' and notq = '1')  report "Teste 4 Falhou" severity error;
+
+		j <= '1'; k <= '1';
+    wait until clk'event and clk='0';
+		assert(q = '1' and notq = '0')  report "Teste 5 Falhou" severity error;
 
     -- finish
     wait until clk'event and clk='0';

@@ -35,8 +35,23 @@ begin
   begin
     test_runner_setup(runner, runner_cfg);
 
+    -- q <= t xor q;
+		-- notq <= not q;
+
     -- IMPLEMENTE AQUI!
     wait until clk'event and clk='0';
+
+    t <= '1';
+    wait until clk'event and clk='0';
+    assert(q = '1') report "Teste 1 falhou" severity error;
+
+    t <= '1';
+    wait until clk'event and clk='0';
+    assert(q = '0') report "Teste 2 falhou" severity error;
+
+    t <= '0';
+    wait until clk'event and clk='0';
+    assert(q = '0') report "Teste 3 falhou" severity error;
 
     -- finish
     wait until clk'event and clk='0';
