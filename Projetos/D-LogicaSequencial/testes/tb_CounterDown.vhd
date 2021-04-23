@@ -34,12 +34,17 @@ begin
     test_runner_setup(runner, runner_cfg);
 
     -- IMPLEMENTE AQUI!
+		
     wait until clk'event and clk='0';
-		assert(Q = "111")  report "Precisa fazer os testes" severity error;
+		assert(q = "111")  report "Falhou Teste 0" severity error;
 
+    wait until clk'event and clk='0';
+		assert(q = "110")  report "Falhou Teste 1" severity error;
+
+    wait until clk'event and clk='0';
+		assert(q = "101")  report "Falhou Teste 2" severity error;
 
     -- finish
-    wait until clk'event and clk='0';
     test_runner_cleanup(runner); -- Simulation ends here
 
 	wait;
