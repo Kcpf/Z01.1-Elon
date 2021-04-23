@@ -18,4 +18,11 @@ architecture arch of FlipFlopJK is
 
 begin
 
+	process(clock, J, Q) begin
+		if(rising_edge(clock)) then
+			q <= (J and notq) or (not K and q);
+			notq <= not q;
+		end if;
+	end process;
+
 end architecture;
