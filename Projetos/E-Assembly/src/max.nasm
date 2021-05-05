@@ -10,3 +10,34 @@
 ; Estamos considerando número inteiros
 
  
+ leaw $R0, %A
+ movw (%A), %D
+ leaw $R1, %A
+
+; Fazendo %D - (%A) e armazena em %D
+ subw %D, (%A), %D
+
+; Menor ou igual a zero
+ leaw $ELSE, %A ; Pula para o ELSE
+ jl %D ; Só vai pular se %D for menor que zero
+ nop 
+
+; Caso o valor seja maior que zero, logo %D é maior
+ IF:            ; Caso não seja menor, continua no IF
+ leaw $R0, %A
+ movw (%A), %D
+ leaw $R2, %A
+ movw %D, (%A)
+
+ leaw $END, %A
+ jmp
+ nop
+
+; Caso o valor seja maior que zero, logo %D é menor
+ ELSE: 
+ leaw $R1, %A
+ movw (%A), %D
+ leaw $R2, %A
+ movw %D, (%A)
+
+ END:
