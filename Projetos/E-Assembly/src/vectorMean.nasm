@@ -19,3 +19,77 @@
 ; RAM[7]:  1  | RAM[7]:  1 |
 ; RAM[8]:  4  | RAM[8]:  4 -
 ; ------------------------------------
+
+
+leaw $4, %A   ; Carrega o tamanhao do vetor no registrador A
+movw (%A), %D ; Move para o registrador D
+leaw $0, %A   ; Carrega o local da RAM da média no registrador A
+movw %D, (%A)
+
+leaw $1, %A
+movw $0, (%A)
+
+
+
+ADD:
+leaw $0, %A
+movw (%A), %D
+leaw $FINALE, %A
+jle
+nop
+
+
+
+leaw $0, %A
+movw (%A), %D
+decw %D
+movw %D, (%A)
+leaw $5, %A
+addw %A, %D, %A
+movw (%A), %D
+
+leaw $1, %A
+addw (%A), %D, %D
+movw %D, (%A)
+
+leaw $ADD, %A
+jmp
+nop
+
+
+FINALE:
+leaw $1, %A
+movw (%A), %D
+leaw $2, %A
+movw %D, (%A)
+
+
+div: 
+leaw $R0, %A
+movw $0, (%A)
+
+
+loop:
+leaw $R2, %A
+movw (%A), %D ; valor R[0]
+
+
+leaw $R4, %A
+subw %D, (%A), %D ; R0 - R1
+leaw $R2, %A
+movw %D, (%A)
+
+leaw $END, %A
+jl %D
+nop
+
+leaw $R0, %A
+movw (%A), %D
+incw %D
+movw %D, (%A)
+
+leaw $loop, %A
+jmp
+nop
+
+END:
