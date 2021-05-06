@@ -20,4 +20,45 @@
 ;  RAM[14] = a
 ; 
 
+INICIO:
+leaw $R10, %A
+movw (%A), %D
+leaw $R14, %A
+
+subw %D, (%A), %A
+movw %A, %D
+leaw $MIDDLE, %A
+jg %D
+nop
+
+leaw $R11, %A
+movw (%A), %D
+leaw $R13, %A
+
+subw %D, (%A), %A
+movw %A, %D
+leaw $MIDDLE, %A
+jg %D
+nop
+
+leaw $MIDDLE2, %A
+jmp
+nop
+
+MIDDLE:
+leaw $R1, %A
+movw (%A), %D
+leaw $END, %A
+jmp
+nop
+
+MIDDLE2:
+leaw $R1, %A
+movw (%A), %D
+incw %D
+
+END:
+leaw $R0, %A
+movw %D, (%A)
+; Checa se 11=13 e 10=14
  
