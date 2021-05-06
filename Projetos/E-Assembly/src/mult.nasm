@@ -18,7 +18,6 @@ leaw $0, %A
 addw (%A), %D, %D  ; faz RAM[3] + RAM[0] e salva em %D
 leaw $3, %A
 movw %D, (%A)
-leaw $1, %A
 
 leaw $1,%A         ; decrementa RAM[1]
 movw (%A), %D
