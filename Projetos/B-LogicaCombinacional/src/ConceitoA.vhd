@@ -43,29 +43,29 @@ signal suporte3 : std_logic_vector(3 downto 0);
 ---------------
 begin
 
-binbcd : ENTITY work.binarioToBcd port map(
-	clk => CLOCK_50, 
-	reset=> '0',
-	binary_in => SW,
-	bcd0 => suporte1,
-	bcd1 => suporte2,
-	bcd2 => suporte3,
-	bcd3  => open,
-	bcd4  => open);
-
-u1: sevenSeg port map(
-	bcd => suporte1,
-	leds => HEX0
-);
-
-u2: sevenSeg port map(
-	bcd => suporte2,
-	leds => HEX1
-);
-
-u3: sevenSeg port map(
-	bcd => suporte3,
-	leds => HEX2
-);
+--binbcd : ENTITY work.binarioToBcd port map(
+--	clk => CLOCK_50, 
+--	reset=> '0',
+--	binary_in => SW,
+--	bcd0 => suporte1,
+--	bcd1 => suporte2,
+--	bcd2 => suporte3,
+--	bcd3  => open,
+--	bcd4  => open);
+--
+--u1: sevenSeg port map(
+--	bcd => suporte1,
+--	leds => HEX0
+--);
+--
+--u2: sevenSeg port map(
+--	bcd => suporte2,
+--	leds => HEX1
+--);
+--
+--u3: sevenSeg port map(
+--	bcd => suporte3,
+--	leds => HEX2
+--);
 
 end rtl;
