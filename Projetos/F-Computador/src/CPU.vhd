@@ -120,7 +120,7 @@ begin
 
   muxALUIComponent: Mux16 port map (
     a => s_ALUout,    
-    b => instruction,  
+    b => instruction(15 downto 0),  
     sel => c_muxALUI_A, 
     q => s_muxALUI_Aout    
   );
@@ -162,7 +162,7 @@ begin
 
   pcComponent: pc port map (
     clock => clock,
-    increment => c_loadPC,
+    increment => '1',
     load => c_loadPC,      
     reset => reset,      
     input => s_regAout,   
@@ -170,7 +170,7 @@ begin
   );
 
     outM <= s_ALUout;
-    addressM <= s_regAout;
-    pcout <= s_pcout;       
+    addressM <= s_regAout(14 downto 0);
+    pcout <= s_pcout(14 downto 0);       
 
 end architecture;
