@@ -100,4 +100,77 @@ architecture arch of CPU is
 
 begin
 
+  controlUnitComponent: ControlUnit port map (
+    instruction => instruction,                
+    zr => c_zr,
+    ng => c_ng,                       
+    muxALUI_A => c_muxALUI_A,                
+    muxAM => c_muxAM,                       
+    zx => c_zx,
+    nx => c_nx, 
+    zy => c_zy, 
+    ny => c_ny, 
+    f => c_f, 
+    no => c_no,       
+    loadA => c_loadA,
+    loadD => c_loadD, 
+    loadM => writeM, 
+    loadPC => c_loadPC
+  );
+
+  muxALUIComponent: Mux16 port map (
+    a => s_ALUout,    
+    b => instruction(15 downto 0),  
+    sel => c_muxALUI_A, 
+    q => s_muxALUI_Aout    
+  );
+
+  regAComponent: Register16 port map (
+    clock => clock,
+    input => s_muxALUI_Aout, 
+    load => c_loadA,
+    output => s_regAout
+  );
+
+  muxAMComponent: Mux16 port map (
+    a => s_regAout,    
+    b => inM,  
+    sel => c_muxAM, 
+    q => s_muxAM_out  
+  );
+
+  regDComponent: Register16 port map (
+    clock => clock,
+    input => s_ALUout, 
+    load => c_loadD,
+    output => s_regDout
+  );
+
+  ALUComponent: ALU port map (
+    x => s_regDout,
+    y => s_muxAM_out,
+    zx => c_zx,
+    nx => c_nx,
+    zy => c_zy,
+    ny => c_ny,
+    f => c_f,
+    no => c_no,
+    zr => c_zr,
+    ng => c_ng,
+    saida => s_ALUout
+  ); 
+
+  pcComponent: pc port map (
+    clock => clock,
+    increment => '1',
+    load => c_loadPC,      
+    reset => reset,      
+    input => s_regAout,   
+    output => s_pcout  
+  );
+
+    outM <= s_ALUout;
+    addressM <= s_regAout(14 downto 0);
+    pcout <= s_pcout(14 downto 0);       
+
 end architecture;
