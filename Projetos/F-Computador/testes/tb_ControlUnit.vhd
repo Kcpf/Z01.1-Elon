@@ -21,8 +21,9 @@ architecture tb of tb_ControlUnit is
         zr,ng                       : in STD_LOGIC;                      -- valores zr(se zero) e ng(se negativo) da ALU
         muxALUI_A                   : out STD_LOGIC;                     -- mux que seleciona entre instrução e ALU para reg. A
         muxAM                       : out STD_LOGIC;                     -- mux que seleciona entre reg. A e Mem. RAM para ALU
+        muxSD                       : out STD_LOGIC;
         zx, nx, zy, ny, f, no       : out STD_LOGIC;                     -- sinais de controle da ALU
-        loadA, loadD, loadM, loadPC : out STD_LOGIC                      -- sinais de load do reg. A, reg. D, Mem. RAM e Program Counter
+        loadA, loadD, loadM, loadPC, loadS : out STD_LOGIC                      -- sinais de load do reg. A, reg. D, Mem. RAM e Program Counter
         );
   end component;
 
@@ -58,6 +59,17 @@ begin
     wait until clk = '1';
     assert(loadD = '1')
       report "TESTE 2: LOAD D" severity error;
+    
+    -- Teste: loadS
+    instruction <= "00" & "0111111111111111";
+    wait until clk = '1';
+    assert(loadS = '0')
+      report "TESTE 1: LOAD S FALSO" severity error;
+
+    instruction <= "10" & "0000000000100000";
+    wait until clk = '1';
+    assert(loadS = '1')
+      report "TESTE 2: LOAD S" severity error;
 
     -- Teste: loadM
     instruction <= "00" & "0111111111111111";
@@ -91,6 +103,17 @@ begin
     wait until clk = '1';
     assert(muxALUI_A = '1')
       report "TESTE 8: muxALUIA falso" severity error;
+    
+    -- Teste: muxSD
+    instruction <= "10" & "0010000000000000";
+    wait until clk = '1';
+    assert(muxSD = '0')
+      report "TESTE 7: muxSD" severity error;
+
+    instruction <= "00" & "0111111111111111";
+    wait until clk = '1';
+    assert(muxSD = '1')
+      report "TESTE 8: muxSD falso" severity error;
 
     -- Teste: zx
     instruction <= "10" & "0001000000000000";

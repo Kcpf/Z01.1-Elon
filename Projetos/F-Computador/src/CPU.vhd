@@ -71,8 +71,9 @@ architecture arch of CPU is
       zr,ng                       : in STD_LOGIC;
       muxALUI_A                   : out STD_LOGIC;
       muxAM                       : out STD_LOGIC;
+      muxSD                       : out STD_LOGIC;
       zx, nx, zy, ny, f, no       : out STD_LOGIC;
-      loadA, loadD, loadM, loadPC : out STD_LOGIC
+      loadA, loadD, loadM, loadPC, loadS : out STD_LOGIC
       );
   end component;
 
@@ -97,6 +98,11 @@ architecture arch of CPU is
   signal s_ALUout: STD_LOGIC_VECTOR(15 downto 0);
 
   signal s_pcout: STD_LOGIC_VECTOR(15 downto 0);
+
+  signal s_regSout: STD_LOGIC_VECTOR(15 downto 0);
+  signal c_loadS: STD_LOGIC;
+  signal c_muxS_D: STD_LOGIC;
+  signal s_muxS_Dout: STD_LOGIC_VECTOR(15 downto 0);
 
 begin
 
@@ -139,6 +145,13 @@ begin
     q => s_muxAM_out  
   );
 
+  muxSDComponent: Mux16 port map (
+    a => s_regSout,    
+    b => s_regDout,  
+    sel => c_muxS_D, 
+    q => s_muxS_Dout  
+  );
+
   regDComponent: Register16 port map (
     clock => clock,
     input => s_ALUout, 
@@ -146,8 +159,15 @@ begin
     output => s_regDout
   );
 
+  regSComponent: Register16 port map (
+    clock => clock,
+    input => s_ALUout, 
+    load => c_loadS,
+    output => s_regSout
+  );
+
   ALUComponent: ALU port map (
-    x => s_regDout,
+    x => s_muxS_Dout,
     y => s_muxAM_out,
     zx => c_zx,
     nx => c_nx,
