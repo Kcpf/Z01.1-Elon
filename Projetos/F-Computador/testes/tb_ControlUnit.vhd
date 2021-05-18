@@ -30,14 +30,16 @@ architecture tb of tb_ControlUnit is
 	signal clk : std_logic := '0';
   signal instruction                 : STD_LOGIC_VECTOR(17 downto 0) := (others => '0');
   signal zr,ng                       : STD_LOGIC := '0';
-  signal muxAM                   : STD_LOGIC := '0';
+  signal muxAM                       : STD_LOGIC := '0';
   signal muxALUI_A                   : STD_LOGIC := '0';
+  signal muxSD                       : STD_LOGIC := '0';
   signal zx, nx, zy, ny, f, no       : STD_LOGIC := '0';
-  signal loadA, loadD,  loadM, loadPC : STD_LOGIC := '0';
+  signal loadA, loadD,  loadM, loadPC, loadS : STD_LOGIC := '0';
 
 begin
 
-	uCU: ControlUnit port map(instruction, zr, ng, muxALUI_A, muxAM, zx, nx, zy, ny, f, no, loadA, loadD, loadM, loadPC);
+	uCU: ControlUnit port map(instruction, zr, ng, muxALUI_A, muxAM, muxSD, zx, nx, zy, 
+                            ny, f, no, loadA, loadD, loadM, loadPC, loadS);
 
 	clk <= not clk after 100 ps;
 
@@ -66,7 +68,7 @@ begin
     assert(loadS = '0')
       report "TESTE 1: LOAD S FALSO" severity error;
 
-    instruction <= "10" & "0000000000100000";
+    instruction <= "10" & "0000000001000000";
     wait until clk = '1';
     assert(loadS = '1')
       report "TESTE 2: LOAD S" severity error;
@@ -105,14 +107,14 @@ begin
       report "TESTE 8: muxALUIA falso" severity error;
     
     -- Teste: muxSD
-    instruction <= "10" & "0010000000000000";
+    instruction <= "10" & "0100000000000000";
     wait until clk = '1';
-    assert(muxSD = '0')
+    assert(muxSD = '1')
       report "TESTE 7: muxSD" severity error;
 
     instruction <= "00" & "0111111111111111";
     wait until clk = '1';
-    assert(muxSD = '1')
+    assert(muxSD = '0')
       report "TESTE 8: muxSD falso" severity error;
 
     -- Teste: zx
@@ -143,6 +145,8 @@ begin
 		assert(loadA = '1' and loadD = '0' and loadM = '0' and loadPC = '0' and muxALUI_A = '1')
       report "Falha em leaw 5, %A" severity error;
 
+    -- 
+
     -----------------------------------------------
     -- Zero na saida da ALU gravando
     ----------------------------------------------
@@ -171,10 +175,11 @@ begin
     -- ULA mem
     ----------------------------------------------
     -- add %S, %A -> %D
-    instruction <= "10" & "001" & "000010" & "0010" & "000";
+    instruction <= "10" & "011" & "000010" & "0010" & "000";
     wait until clk = '1';
     assert(loadA  = '0' and loadD  = '1' and  loadM  = '0' and  loadPC = '0' and
-           zx = '0' and nx = '0' and zy = '0' and ny = '0' and f = '1' and no = '0')
+           zx = '0' and nx = '0' and zy = '0' and ny = '0' and f = '1' and 
+           no = '0' and loadS = '0' and muxSD = '1')
       report " **Falha** add %S, %A, %D " severity error;
 
     -- subw %D, (%A) -> %D
@@ -183,6 +188,14 @@ begin
     assert(loadA  = '0' and loadD  = '1' and  loadM  = '0' and  loadPC = '0' and
            zx = '0' and nx = '1' and zy = '0' and ny = '0' and f = '1' and no = '1')
       report " **Falha** subw %S, %D " severity error;
+
+    -- subw %S, (%A) -> %D
+    instruction <= "10" & "011" & "010011" & "0010" & "000";
+    wait until clk = '1';
+    assert(loadA  = '0' and loadD  = '1' and  loadM  = '0' and  loadPC = '0' and
+           loadS = '0' and zx = '0' and nx = '1' and zy = '0' and ny = '0' and 
+           f = '1' and no = '1' and muxSD = '1')
+      report " **Falha** subw %S, %A, %D " severity error;
 
     -----------------------------------------------
     -- JMP
@@ -223,7 +236,7 @@ begin
     assert(loadA  = '0' and loadD  = '0' and  loadM  = '0' and  loadPC = '0' and
            zx = '0' and nx = '0' and zy = '1' and ny = '1' and f = '0' and no = '0')
       report " **Falha** em jge %D falso" severity error;
-
+  
     test_runner_cleanup(runner); -- Simulation ends here
 
 	wait;

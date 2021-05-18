@@ -20,10 +20,11 @@ entity ControlUnit is
 		muxAM                       : out STD_LOGIC;                     -- mux que seleciona entre
                                                                      -- reg. A e Mem. RAM para ALU
                                                                   -- A  e Mem. RAM para ALU
+    muxSD                       : out STD_LOGIC;
 		zx, nx, zy, ny, f, no       : out STD_LOGIC;                     -- sinais de controle da ALU
-		loadA, loadD, loadM, loadPC, loadS : out STD_LOGIC;               -- sinais de load do reg. A,
+		loadA, loadD, loadM, loadPC, loadS : out STD_LOGIC               -- sinais de load do reg. A,
                                                                      -- reg. D, Mem. RAM e Program Counter 
-    muxSD : out STD_LOGIC 
+     
     );
 end entity;
 
