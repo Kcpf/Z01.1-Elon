@@ -70,6 +70,7 @@ architecture arch of CPU is
       instruction                 : in STD_LOGIC_VECTOR(17 downto 0);
       zr,ng                       : in STD_LOGIC;
       muxALUI_A                   : out STD_LOGIC;
+      muxALUI_D                   : out STD_LOGIC;
       muxAM                       : out STD_LOGIC;
       muxSD                       : out STD_LOGIC;
       zx, nx, zy, ny, f, no       : out STD_LOGIC;
@@ -104,14 +105,19 @@ architecture arch of CPU is
   signal c_muxS_D: STD_LOGIC;
   signal s_muxS_Dout: STD_LOGIC_VECTOR(15 downto 0);
 
+  signal c_muxALUI_D: STD_LOGIC;
+  signal s_muxALUI_Dout: STD_LOGIC_VECTOR(15 downto 0);
+
 begin
 
   controlUnitComponent: ControlUnit port map (
     instruction => instruction,                
     zr => c_zr,
     ng => c_ng,                       
-    muxALUI_A => c_muxALUI_A,                
-    muxAM => c_muxAM,                       
+    muxALUI_A => c_muxALUI_A,  
+    muxALUI_D => c_muxALUI_D,              
+    muxAM => c_muxAM,  
+    muxSD => c_muxS_D,                    
     zx => c_zx,
     nx => c_nx, 
     zy => c_zy, 
@@ -120,11 +126,12 @@ begin
     no => c_no,       
     loadA => c_loadA,
     loadD => c_loadD, 
-    loadM => writeM, 
-    loadPC => c_loadPC
+    loadM => writeM,
+    loadPC => c_loadPC,
+    loadS => c_loadS
   );
 
-  muxALUIComponent: Mux16 port map (
+  muxALUI_AComponent: Mux16 port map (
     a => s_ALUout,    
     b => instruction(15 downto 0),  
     sel => c_muxALUI_A, 
@@ -152,9 +159,16 @@ begin
     q => s_muxS_Dout  
   );
 
+  muxALUI_DComponent: Mux16 port map (
+    a => s_ALUout,    
+    b => instruction(15 downto 0),  
+    sel => c_muxALUI_D, 
+    q => s_muxALUI_Dout  
+  );
+
   regDComponent: Register16 port map (
     clock => clock,
-    input => s_ALUout, 
+    input => s_muxALUI_Dout, 
     load => c_loadD,
     output => s_regDout
   );
