@@ -148,7 +148,7 @@ begin
       report "Falha em leaw 5, %A" severity error;
 
     -- leaw %5, %D
-    instruction <= "00" & "0000000000000101";
+    instruction <= "01" & "0000000000000101";
     wait until clk = '1';
 		assert(loadA = '1' and loadD = '1' and loadM = '0' and loadPC = '0' and 
            muxALUI_A = '1' and muxALUI_D = '1')
