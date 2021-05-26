@@ -120,7 +120,9 @@ public class Parser {
      */
     public String label(String command) {
         /* TODO: implementar */
-    	return null;
+        int end = command.indexOf(':');
+        String str = command.substring(0, end);
+        return str;
     }
 
     /**
@@ -131,7 +133,8 @@ public class Parser {
      */
     public String[] instruction(String command) {
         /* TODO: implementar */
-    	return null;
+        String[] str = command.split(" |\\,");
+    	return str;
     }
 
 
