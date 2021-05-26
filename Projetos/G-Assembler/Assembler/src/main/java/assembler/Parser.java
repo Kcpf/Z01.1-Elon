@@ -133,7 +133,15 @@ public class Parser {
      */
     public String[] instruction(String command) {
         /* TODO: implementar */
+        if (command.contains(";")) {
+            command = command.split(";")[0];
+        }
         String[] str = command.split(" |\\,");
+        for (String s : str) {
+
+                System.out.println(s);
+
+        }
     	return str;
     }
 
