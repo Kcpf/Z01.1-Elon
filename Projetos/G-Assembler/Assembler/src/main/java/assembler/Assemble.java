@@ -94,6 +94,7 @@ public class Assemble {
     public void generateMachineCode() throws FileNotFoundException, IOException{
         Parser parser = new Parser(inputFile);  // abre o arquivo e aponta para o começo
         String instruction  = "";
+        boolean jmp = false;
 
         /**
          * Aqui devemos varrer o código nasm linha a linha
@@ -105,6 +106,14 @@ public class Assemble {
             String[] comando = parser.instruction(parser.command());
             switch (parser.commandType(parser.command())){
                 case C_COMMAND:
+
+                    if (jmp == true && !"nop".equals(comando[0])){
+                        throw new java.lang.Error("Nao possui nop apos usar jump");
+                    }
+                    jmp = false;
+                    if (Code.jump(comando) != "000") {
+                        jmp = true;
+                    }
                     instruction = "10" + Code.comp(comando) + Code.dest(comando) + Code.jump(comando);
                     break;
                 case A_COMMAND:
