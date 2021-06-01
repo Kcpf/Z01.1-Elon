@@ -60,7 +60,6 @@ public class Assemble {
             }
             jmp = false;
             if (Code.jump(comando) != "000") {
-                System.out.println(jmp);
                 jmp = true;
             }
             if (parser.commandType(parser.command()) == Parser.CommandType.L_COMMAND) {
@@ -117,8 +116,8 @@ public class Assemble {
             String[] comando = parser.instruction(parser.command());
             if (jmp == true && !"nop".equals(comando[0])){
                 if(outHACK!=null) {
-//                    romAddress++;
                     outHACK.println("100000000000000000");
+                    System.out.println("Esta faltando mensagem nop apos jump. Sera adicionado computacionalmente");
                 }
             }
             jmp = false;
