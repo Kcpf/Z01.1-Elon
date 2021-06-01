@@ -17,6 +17,7 @@ import java.util.*;
  *   -o <arquivo binario>    parametro indica onde será salvo o arquivo gerado .mif
  *   -d                      ativa modo verborragico
  *   -h                      exibe a ajuda
+ *   -v                      modo verbose
  */
 class AssemblerZ01 {
 
@@ -71,17 +72,22 @@ class AssemblerZ01 {
 
         // Starts to read file and generates de outputs
         try {
+
+            if (verbose) System.out.println("[LOG] Iniciando o Assembler");
             // Cria objeto assembler auxiliar
             Assemble assembler = new Assemble(  inputFile,
                                                 outputFileHack,
                                                 verbose);
 
+            if (verbose) System.out.println("[LOG] Criando Tabela de Simbolos");
             // Cria tabela de símbolos
             assembler.fillSymbolTable();
 
+            if (verbose) System.out.println("[LOG] Gerando código de Máquina");
             // Cria linguagem de maquina
             assembler.generateMachineCode();
 
+            if (verbose) System.out.println("[LOG] Assembler finalizado");
             // Fecha arquivos
             assembler.close();
 
