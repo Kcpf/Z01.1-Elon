@@ -20,7 +20,6 @@ public class Assemble {
     private PrintWriter outHACK = null;    // grava saida do código de máquina em Hack
     boolean debug;                         // flag que especifica se mensagens de debug são impressas
     private SymbolTable table;             // tabela de símbolos (variáveis e marcadores)
-
     /*
      * inicializa assembler
      * @param inFile
@@ -37,6 +36,7 @@ public class Assemble {
         table      = new SymbolTable();                          // Cria e inicializa a tabela de simbolos
     }
 
+
     /**
      * primeiro passo para a construção da tabela de símbolos de marcadores (labels)
      * varre o código em busca de novos Labels e Endereços de memórias (variáveis)
@@ -51,8 +51,17 @@ public class Assemble {
         // LOOP:
         // END:
         Parser parser = new Parser(inputFile);
+        boolean jmp = false;
         int romAddress = 0;
         while (parser.advance()){
+            String[] comando = parser.instruction(parser.command());
+            if (jmp == true && !"nop".equals(comando[0])){
+                romAddress++;
+            }
+            jmp = false;
+            if (Code.jump(comando) != "000") {
+                jmp = true;
+            }
             if (parser.commandType(parser.command()) == Parser.CommandType.L_COMMAND) {
                 String label = parser.label(parser.command());
                 if (!table.contains(label)) {
@@ -80,6 +89,7 @@ public class Assemble {
             }
             ramAddress++;
         }
+
         parser.close();
         return table;
     }
@@ -104,16 +114,18 @@ public class Assemble {
          */
         while (parser.advance()){
             String[] comando = parser.instruction(parser.command());
+            if (jmp == true && !"nop".equals(comando[0])){
+                if(outHACK!=null) {
+                    outHACK.println("100000000000000000");
+                    System.out.println("Esta faltando mensagem nop apos jump. Sera adicionado computacionalmente");
+                }
+            }
+            jmp = false;
+            if (Code.jump(comando) != "000") {
+                jmp = true;
+            }
             switch (parser.commandType(parser.command())){
                 case C_COMMAND:
-
-                    if (jmp == true && !"nop".equals(comando[0])){
-                        throw new java.lang.Error("Nao possui nop apos usar jump");
-                    }
-                    jmp = false;
-                    if (Code.jump(comando) != "000") {
-                        jmp = true;
-                    }
                     instruction = "10" + Code.comp(comando) + Code.dest(comando) + Code.jump(comando);
                     break;
                 case A_COMMAND:
@@ -130,7 +142,6 @@ public class Assemble {
             if(outHACK!=null) {
                 outHACK.println(instruction);
             }
-            instruction = null;
         }
     }
 
