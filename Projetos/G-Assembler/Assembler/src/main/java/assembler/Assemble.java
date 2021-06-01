@@ -33,7 +33,7 @@ public class Assemble {
         inputFile  = inFile;
         hackFile   = new File(outFileHack);                      // Cria arquivo de saída .hack
         outHACK    = new PrintWriter(new FileWriter(hackFile));  // Cria saída do print para
-                                                                 // o arquivo hackfile
+        // o arquivo hackfile
         table      = new SymbolTable();                          // Cria e inicializa a tabela de simbolos
     }
 
@@ -55,11 +55,12 @@ public class Assemble {
         while (parser.advance()){
             if (parser.commandType(parser.command()) == Parser.CommandType.L_COMMAND) {
                 String label = parser.label(parser.command());
-                /* TODO: implementar */
-                // deve verificar se tal label já existe na tabela,
-                // se não, deve inserir. Caso contrário, ignorar.
+                if (!table.contains(label)) {
+                    table.addEntry(label, romAddress);
+                }
+            } else {
+                romAddress++;
             }
-            romAddress++;
         }
         parser.close();
 
@@ -74,12 +75,10 @@ public class Assemble {
             if (parser.commandType(parser.command()) == Parser.CommandType.A_COMMAND) {
                 String symbol = parser.symbol(parser.command());
                 if (Character.isDigit(symbol.charAt(0))){
-                    /* TODO: implementar */
-                    // deve verificar se tal símbolo já existe na tabela,
-                    // se não, deve inserir associando um endereço de
-                    // memória RAM a ele.
+                    if (!table.contains(symbol)) table.addEntry(symbol, ramAddress);
                 }
             }
+            ramAddress++;
         }
         parser.close();
         return table;
@@ -103,14 +102,20 @@ public class Assemble {
          * seguindo o instruction set
          */
         while (parser.advance()){
+            String[] comando = parser.instruction(parser.command());
             switch (parser.commandType(parser.command())){
-                /* TODO: implementar */
                 case C_COMMAND:
-                break;
-            case A_COMMAND:
-                break;
-            default:
-                continue;
+                    instruction = "10" + Code.comp(comando) + Code.dest(comando) + Code.jump(comando);
+                    break;
+                case A_COMMAND:
+                    try {
+                        instruction = "00" + Code.toBinary(parser.symbol(parser.command()));
+                    } catch (Exception e){
+                        instruction = "00" + Code.toBinary(table.getAddress(parser.symbol(parser.command())).toString());
+                    }
+                    break;
+                default:
+                    continue;
             }
             // Escreve no arquivo .hack a instrução
             if(outHACK!=null) {
