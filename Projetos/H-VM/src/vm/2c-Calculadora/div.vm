@@ -1,1 +1,33 @@
 function div 2
+    
+    push argument 1
+    pop local 1
+    push argument 0
+    pop local 0
+
+    label INICIO 
+
+    push local 0
+    push local 1
+    sub
+    pop local 0
+
+    push local 0
+    push local 1
+    lt
+    if-goto FINAL
+
+    push local 3
+    push constant 1
+    add
+    pop local 3
+
+    goto INICIO
+
+    label FINAL
+
+    push local 3
+    push constant 2
+    sub
+    
+    return

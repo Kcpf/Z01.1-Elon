@@ -1,1 +1,30 @@
 function pow 3
+    push argument 0
+    pop local 0
+
+    push argument 1
+    pop local 1 // CONTADOR
+
+    label INICIO
+    push local 1
+    push constant 1
+    eq
+    if-goto FIM
+
+    push local 0
+    push argument 0
+    call mult 2
+    pop local 0
+
+    push local 1    
+    push constant 1
+    sub
+    pop local 1
+
+    goto INICIO
+
+    label FIM
+    
+    push local 0
+
+    return

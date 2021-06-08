@@ -21,5 +21,35 @@ label end
 // esse loop sempre deve existir!
 // caso contrario o computador vai
 // executar lixo de memoria.
+
+// temp 4 -> Resto
+// temp 3 -> Resultado inteiro
+
+label INICIO 
+
+push temp 1
+neg
+push temp 0 
+add
+pop temp 0
+
+push temp 0
+push temp 1
+lt
+if-goto FINAL
+
+push temp 3
+push constant 1
+add
+pop temp 3
+
+goto INICIO
+
+label FINAL
+push temp 3
+push constant 1
+add
+pop temp 3
+
 label while
-  goto while
+goto while

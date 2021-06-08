@@ -22,5 +22,23 @@ function Main.main 0
 // esse loop sempre deve existir!
 // caso contrario o computador vai
 // executar lixo de memoria.
+
+push constant 1
+pop temp 3
+
+label INICIO
+push temp 3
+push constant 55
+eq
+
+if-goto FINAL
+push temp 3
+push constant 1
+add
+pop temp 3
+goto INICIO
+
+label FINAL
+
 label while
-  goto while
+goto while
